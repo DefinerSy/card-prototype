@@ -1,73 +1,65 @@
-# React + TypeScript + Vite
+# 卡牌游戏原型 (Card Game Prototype)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个基于 React + TypeScript + Vite 的卡牌游戏原型。
 
-Currently, two official plugins are available:
+## 🎮 在线游玩
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+访问 [https://definersy.github.io/card-prototype/](https://definersy.github.io/card-prototype/) 即可直接游玩！
 
-## React Compiler
+## 功能特性
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **卡组构筑**：从已解锁的卡牌中选择 10-30 张构建你的卡组
+- **战斗系统**：击败敌人以取得胜利
+- **燃烧机制**：使用卡牌需要燃烧相应数量的牌作为费用
+- **卡牌效果**：每张牌有独特的效果，某些卡牌在被烧掉时还会触发额外效果
+- **动画效果**：抽牌、燃烧、弃牌等动画效果
 
-## Expanding the ESLint configuration
+## 卡牌类型
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| 类型 | 颜色 | 说明 |
+|------|------|------|
+| 伤害 (damage) | 红色 | 对敌人造成伤害 |
+| 费用 (fuel) | 黄色 | 提供资源或被烧掉时触发效果 |
+| 调度 (cycle) | 蓝色 | 抽牌/过牌效果 |
+| 效果 (buffer) | 绿色 | 其他特殊效果 |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 本地开发
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+```bash
+# 安装依赖
+npm install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
+
+# 预览生产构建
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 技术栈
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- Framer Motion (动画)
+- Zustand (状态管理)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 项目结构
+
+```
+src/
+├── components/
+│   ├── game/       # 游戏界面组件
+│   ├── lobby/      # 大厅界面组件
+│   └── ui/         # UI 基础组件
+├── game/
+│   ├── cards/      # 卡牌定义
+│   ├── data/       # 游戏数据（敌人等）
+│   ├── logic/      # 游戏逻辑
+│   └── types.ts    # 类型定义
+└── store/          # 状态管理
 ```
