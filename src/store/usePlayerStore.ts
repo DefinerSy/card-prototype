@@ -9,6 +9,7 @@ interface PlayerStore {
   addCoins: (amount: number) => void;
   addStardust: (amount: number) => void;
   unlockCard: (cardId: string) => void;
+  buyCard: (cardId: string, cost: number) => boolean;  // 购买卡牌，返回是否成功
   addToDeck: (cardId: string) => void;
   removeFromDeck: (cardId: string, index?: number) => void;
   resetPlayer: () => void;
@@ -51,13 +52,40 @@ export const usePlayerStore = create<PlayerStore>()(
           };
         }),
 
-      addToDeck: (cardId) =>
-        set((state) => ({
+      buyCard: (cardId, cost) => {
+        const state = get();
+        // 检查是否已经拥有
+        if (state.player.unlockedCards.includes(cardId)) {
+          return false;
+        }
+        // 检查金币是否足够
+        if (state.player.coins < cost) {
+          return false;
+        }
+        // 扣费并解锁卡牌
+        set(() => ({
           player: {
             ...state.player,
-            deck: [...state.player.deck, cardId],
+            coins: state.player.coins - cost,
+            unlockedCards: [...state.player.unlockedCards, cardId],
           },
-        })),
+        }));
+        return true;
+      },
+
+      addToDeck: (cardId) =>
+        set((state) => {
+          // 卡组最多 30 张
+          if (state.player.deck.length >= 30) {
+            return state;
+          }
+          return {
+            player: {
+              ...state.player,
+              deck: [...state.player.deck, cardId],
+            },
+          };
+        }),
 
       removeFromDeck: (cardId, index) =>
         set((state) => {

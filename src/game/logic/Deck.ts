@@ -83,8 +83,23 @@ export function playCard(state: GameState, cardIndex: number): { success: boolea
     state.burnPile.push(burned);
   }
 
+  // 应用伤害 buff 到伤害卡
+  const originalEffect = card.effect;
+  if (card.type === 'damage' && (state as any).damageBuff) {
+    card.effect = (s) => {
+      originalEffect(s);
+      // 额外伤害
+      s.enemy.hp -= (state as any).damageBuff;
+    };
+  }
+
   // 3. 触发卡牌效果
   card.effect(state);
+
+  // 恢复原效果函数
+  if (card.type === 'damage' && (state as any).damageBuff) {
+    card.effect = originalEffect;
+  }
 
   // 4. 打出的牌进入弃牌区
   state.discardPile.push(card);
@@ -95,6 +110,9 @@ export function playCard(state: GameState, cardIndex: number): { success: boolea
     state.isVictory = true;
     state.isGameOver = true;
   }
+
+  // 清除回合 buff
+  (state as any).damageBuff = 0;
 
   return { success: true };
 }
@@ -127,4 +145,140 @@ export function checkGameState(state: GameState): void {
     state.isVictory = false;
     state.isGameOver = true;
   }
+}
+
+/**
+ * 从弃牌区检索卡牌到手牌
+ */
+export function searchDiscardPile(state: GameState, cardId: string): Card | null {
+  const index = state.discardPile.findIndex(c => c.id === cardId);
+  if (index !== -1) {
+    const card = state.discardPile[index];
+    state.discardPile.splice(index, 1);
+    state.hand.push(card);
+    return card;
+  }
+  return null;
+}
+
+/**
+ * 从弃牌区随机检索一张卡牌到手牌
+ */
+export function searchRandomFromDiscardPile(state: GameState): Card | null {
+  if (state.discardPile.length === 0) return null;
+  const index = Math.floor(Math.random() * state.discardPile.length);
+  const card = state.discardPile[index];
+  state.discardPile.splice(index, 1);
+  state.hand.push(card);
+  return card;
+}
+
+/**
+ * 从燃烧区检索卡牌到手牌
+ */
+export function searchBurnPile(state: GameState, cardId: string): Card | null {
+  const index = state.burnPile.findIndex(c => c.id === cardId);
+  if (index !== -1) {
+    const card = state.burnPile[index];
+    state.burnPile.splice(index, 1);
+    state.hand.push(card);
+    return card;
+  }
+  return null;
+}
+
+/**
+ * 增加手牌中所有卡牌的伤害（临时 buff，本回合有效）
+ */
+export function buffHandDamage(state: GameState, bonus: number): void {
+  // 由于伤害是在卡牌 effect 中直接计算的，这里我们无法直接修改卡牌
+  // 所以我们用一个变通方法：给一个全局 buff 标记
+  (state as any).damageBuff = ((state as any).damageBuff || 0) + bonus;
+}
+
+/**
+ * 燃烧指定数量的随机手牌
+ */
+export function burnRandomFromHand(state: GameState, count: number): Card[] {
+  const burned: Card[] = [];
+  for (let i = 0; i < count && state.hand.length > 0; i++) {
+    const index = Math.floor(Math.random() * state.hand.length);
+    const card = state.hand[index];
+    state.hand.splice(index, 1);
+    if (card.onBurn) {
+      card.onBurn(state);
+    }
+    state.burnPile.push(card);
+    burned.push(card);
+  }
+  return burned;
+}
+
+/**
+ * 燃烧手牌中费用最低的卡牌
+ */
+export function burnCheapestFromHand(state: GameState): Card | null {
+  if (state.hand.length === 0) return null;
+  const cheapestIndex = state.hand.reduce(
+    (minIdx, card, idx) => card.cost < state.hand[minIdx].cost ? idx : minIdx,
+    0
+  );
+  const card = state.hand[cheapestIndex];
+  state.hand.splice(cheapestIndex, 1);
+  if (card.onBurn) {
+    card.onBurn(state);
+  }
+  state.burnPile.push(card);
+  return card;
+}
+
+/**
+ * 燃烧手牌中费用最高的卡牌
+ */
+export function burnMostExpensiveFromHand(state: GameState): Card | null {
+  if (state.hand.length === 0) return null;
+  const expensiveIndex = state.hand.reduce(
+    (maxIdx, card, idx) => card.cost > state.hand[maxIdx].cost ? idx : maxIdx,
+    0
+  );
+  const card = state.hand[expensiveIndex];
+  state.hand.splice(expensiveIndex, 1);
+  if (card.onBurn) {
+    card.onBurn(state);
+  }
+  state.burnPile.push(card);
+  return card;
+}
+
+/**
+ * 将手牌中所有指定类型的卡牌置入弃牌区
+ */
+export function discardHandByType(state: GameState, type: string): number {
+  let count = 0;
+  for (let i = state.hand.length - 1; i >= 0; i--) {
+    if (state.hand[i].type === type) {
+      state.discardPile.push(state.hand[i]);
+      state.hand.splice(i, 1);
+      count++;
+    }
+  }
+  return count;
+}
+
+/**
+ * 复制手牌中的一张随机卡牌（创建临时复制）
+ */
+export function duplicateRandomHand(state: GameState): Card | null {
+  if (state.hand.length === 0) return null;
+  const index = Math.floor(Math.random() * state.hand.length);
+  const card = state.hand[index];
+  // 创建一个临时复制
+  const copy: Card = {
+    ...card,
+    id: `copy_${card.id}_${Date.now()}`,
+    name: `${card.name}(复制)`,
+    cost: 0, // 复制品费用为 0
+  };
+  state.hand.push(copy);
+  return copy;
 }

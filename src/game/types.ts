@@ -33,6 +33,7 @@ export interface GameState {
   level: number;
   isGameOver: boolean;
   isVictory: boolean;
+  damageBuff?: number;  // 伤害增益标记
 }
 
 // 玩家数据（局外 - 持久化）

@@ -26,6 +26,9 @@ function App() {
     if (victory) {
       // 胜利奖励
       addCoins(50);
+    } else {
+      // 失败也有参与奖励
+      addCoins(20);
     }
     resetGame();
     setIsInGame(false);
