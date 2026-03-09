@@ -106,10 +106,14 @@ interface LobbyProps {
 
 export function Lobby({ onStartGame, onResetData }: LobbyProps) {
   const player = usePlayerStore((state) => state.player);
-  const { addToDeck, removeFromDeck, buyCard } = usePlayerStore();
+  const { addToDeck, removeFromDeck, buyCard, addCoins } = usePlayerStore();
   const { startGame } = useGameStore();
   const [activeTab, setActiveTab] = useState<'deck' | 'cards' | 'shop'>('deck');
   const [selectedEnemy, setSelectedEnemy] = useState(0);
+
+  const handleAddTestCoins = () => {
+    addCoins(100);
+  };
 
   const handleStartGame = () => {
     if (player.deck.length < 10) {
@@ -173,9 +177,14 @@ export function Lobby({ onStartGame, onResetData }: LobbyProps) {
                 知识：{player.knowledgeShards}
               </div>
             </div>
-            <Button variant="danger" size="sm" onClick={onResetData}>
-              重置数据
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="primary" size="sm" onClick={handleAddTestCoins}>
+                +100 金币
+              </Button>
+              <Button variant="danger" size="sm" onClick={onResetData}>
+                重置数据
+              </Button>
+            </div>
           </div>
         </div>
 
