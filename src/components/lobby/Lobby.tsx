@@ -8,12 +8,11 @@ import { useGameStore } from '@/store/useGameStore';
 import { useState } from 'react';
 
 // 迷你卡牌组件 - 用于卡组构筑页面
-function MiniCard({ card, onClick, showAddHint, disabled, showBuyHint, price, onBuy }: {
+function MiniCard({ card, onClick, showAddHint, disabled, price, onBuy }: {
   card: CardType;
   onClick?: () => void;
   showAddHint?: boolean;
   disabled?: boolean;
-  showBuyHint?: boolean;
   price?: number;
   onBuy?: () => void;
 }) {
