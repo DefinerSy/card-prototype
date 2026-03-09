@@ -242,7 +242,6 @@ export function Lobby({ onStartGame, onResetData }: LobbyProps) {
                         card={card}
                         onBuy={() => handleBuyCard(card)}
                         price={getCardPrice(card)}
-                        showBuyHint
                       />
                     ))}
 
