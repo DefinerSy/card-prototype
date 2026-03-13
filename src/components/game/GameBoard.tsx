@@ -324,7 +324,6 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
             gameState={gameState}
             currentAction={currentAction}
             isAnimating={isAnimating}
-            onAnimationStart={() => {}}
             onAnimationComplete={handleAnimationComplete}
           />
         </div>

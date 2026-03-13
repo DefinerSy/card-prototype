@@ -7,7 +7,6 @@ import type { CardType } from '@/game/types';
 
 interface HandsProps {
   action: CardType | 'idle';
-  isAnimating: boolean;
   onAnimationComplete: () => void;
 }
 
@@ -129,7 +128,7 @@ function ParticleEffect({ type }: { type: CardType }) {
   );
 }
 
-export function Hands({ action, isAnimating, onAnimationComplete }: HandsProps) {
+export function Hands({ action, onAnimationComplete }: HandsProps) {
   const leftControls = useAnimation();
   const rightControls = useAnimation();
   const [showParticles, setShowParticles] = useState(false);

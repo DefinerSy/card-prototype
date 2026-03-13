@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import type { Variants, AnimationControls } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 
 interface LeftHandProps {
   variants?: Variants;
-  animate?: AnimationControls | string;
+  animate?: any;
   className?: string;
 }
 

@@ -8,7 +8,6 @@ interface FirstPersonViewProps {
   gameState: GameState;
   currentAction: CardType | 'idle';
   isAnimating: boolean;
-  onAnimationStart: (cardType: CardType) => void;
   onAnimationComplete: () => void;
 }
 
@@ -77,7 +76,6 @@ export function FirstPersonView({
   gameState,
   currentAction,
   isAnimating,
-  onAnimationStart,
   onAnimationComplete,
 }: FirstPersonViewProps) {
   const [isHit, setIsHit] = useState(false);
@@ -142,7 +140,6 @@ export function FirstPersonView({
       <div className="absolute inset-0">
         <Hands
           action={currentAction}
-          isAnimating={isAnimating}
           onAnimationComplete={handleAnimationComplete}
         />
       </div>
