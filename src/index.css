@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --font-sketch: 'Permanent Marker', cursive;
-  --font-handwriting: 'Amatic SC', cursive;
+  --font-sketch: 'Permanent Marker', 'ZCOOL QingKe HuangYou', cursive;
+  --font-handwriting: 'Amatic SC', 'ZCOOL QingKe HuangYou', cursive;
   
   font-family: var(--font-handwriting);
   line-height: 1.5;
@@ -44,10 +44,19 @@ body::before {
 .sketchy-border {
   border: 3px solid #111;
   border-radius: 2px 255px 3px 25px / 255px 5px 225px 3px;
+}
+
+.sketchy-border-filter {
+  border: 3px solid #111;
+  border-radius: 2px 255px 3px 25px / 255px 5px 225px 3px;
   filter: url(#sketchy-line);
 }
 
 .rough-bg {
+  /* 移除直接的 filter，避免影响子元素文本可读性 */
+}
+
+.rough-filter {
   filter: url(#rough-edge);
 }
 

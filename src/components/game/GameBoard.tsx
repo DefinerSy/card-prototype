@@ -25,14 +25,15 @@ function BurnEffect({ cards, onComplete }: { cards: Card[]; onComplete: () => vo
           onAnimationComplete={idx === cards.length - 1 ? onComplete : undefined}
           className="absolute inset-0 flex items-center justify-center"
         >
-          <div className="w-32 h-40 bg-[#111] sketchy-border flex items-center justify-center" style={{ filter: 'url(#rough-edge)' }}>
+          <div className="w-32 h-40 flex items-center justify-center relative">
+            <div className="absolute inset-0 bg-[#111] sketchy-border" style={{ filter: 'url(#rough-edge)' }}></div>
             <motion.div
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [1, 0.5, 1]
               }}
               transition={{ duration: 0.5, repeat: Infinity }}
-              className="text-6xl text-red-600"
+              className="text-6xl text-red-600 relative z-10"
               style={{ fontFamily: 'var(--font-sketch)' }}
             >
               X
@@ -367,7 +368,7 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
         {viewMode !== 'none' && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setViewMode('none')}>
             <div className="bg-[#e0ddd5] p-6 max-w-4xl w-full sketchy-border rough-bg max-h-[80vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-between items-center mb-4 border-b-4 border-[#111] pb-2" style={{ filter: 'url(#sketchy-line)' }}>
+              <div className="flex justify-between items-center mb-4 border-b-4 border-[#111] pb-2">
                 <h2 className="text-3xl font-bold text-[#111]" style={{ fontFamily: 'var(--font-sketch)' }}>
                   {viewMode === 'drawPile' && `DECK (${gameState.drawPile.length})`}
                   {viewMode === 'discardPile' && `DISCARD (${gameState.discardPile.length})`}

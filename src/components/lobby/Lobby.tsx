@@ -84,8 +84,9 @@ function MiniCard({ card, onClick, showAddHint, disabled, price, onBuy }: {
 
       {/* 卡组已满提示 */}
       {disabled && !onBuy && (
-        <div className="absolute inset-0 bg-[#111]/80 flex items-center justify-center z-20" style={{ filter: 'url(#rough-edge)' }}>
-          <span className="text-sm text-red-500 font-bold px-1 text-center transform -rotate-12" style={{ fontFamily: 'var(--font-sketch)' }}>FULL</span>
+        <div className="absolute inset-0 z-20 flex items-center justify-center">
+          <div className="absolute inset-0 bg-[#111]/80" style={{ filter: 'url(#rough-edge)' }}></div>
+          <span className="relative text-sm text-red-500 font-bold px-1 text-center transform -rotate-12" style={{ fontFamily: 'var(--font-sketch)' }}>FULL</span>
         </div>
       )}
 
@@ -98,15 +99,17 @@ function MiniCard({ card, onClick, showAddHint, disabled, price, onBuy }: {
 
       {/* 添加提示 */}
       {!disabled && !onBuy && showAddHint && (
-        <div className="absolute inset-0 bg-[#111]/60 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity z-20" style={{ filter: 'url(#rough-edge)' }}>
-          <span className="text-lg text-[#e0ddd5] font-bold transform -rotate-12" style={{ fontFamily: 'var(--font-sketch)' }}>+ ADD</span>
+        <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+          <div className="absolute inset-0 bg-[#111]/60" style={{ filter: 'url(#rough-edge)' }}></div>
+          <span className="relative text-lg text-[#e0ddd5] font-bold transform -rotate-12" style={{ fontFamily: 'var(--font-sketch)' }}>+ ADD</span>
         </div>
       )}
 
       {/* 购买提示 */}
       {onBuy && (
-        <div className="absolute inset-0 bg-[#111]/60 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity z-20" style={{ filter: 'url(#rough-edge)' }}>
-          <span className="text-lg text-yellow-500 font-bold transform -rotate-12" style={{ fontFamily: 'var(--font-sketch)' }}>BUY</span>
+        <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+          <div className="absolute inset-0 bg-[#111]/60" style={{ filter: 'url(#rough-edge)' }}></div>
+          <span className="relative text-lg text-yellow-500 font-bold transform -rotate-12" style={{ fontFamily: 'var(--font-sketch)' }}>BUY</span>
         </div>
       )}
     </div>
@@ -187,7 +190,7 @@ export function Lobby({ onStartGame, onResetData }: LobbyProps) {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* 标题和资源显示 */}
-        <div className="flex justify-between items-center mb-6 border-b-4 border-[#111] pb-4" style={{ filter: 'url(#sketchy-line)' }}>
+        <div className="flex justify-between items-center mb-6 border-b-4 border-[#111] pb-4">
           <h1 className="text-5xl font-bold text-[#e0ddd5]" style={{ fontFamily: 'var(--font-sketch)', letterSpacing: '2px' }}>INK & ASHES</h1>
           <div className="flex items-center gap-4">
             <div className="flex gap-4 font-bold" style={{ fontFamily: 'var(--font-sketch)' }}>

@@ -27,7 +27,7 @@ Card.displayName = 'Card';
 export const CardHeader = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, children, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn('px-4 py-3 border-b-4 border-[#111]', className)} style={{ filter: 'url(#sketchy-line)' }} {...props}>
+      <div ref={ref} className={cn('px-4 py-3 border-b-4 border-[#111]', className)} {...props}>
         {children}
       </div>
     );
