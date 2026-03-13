@@ -23,15 +23,18 @@ class AudioService {
 
   constructor() {
     // Initialize BGM
+    // Note: Using import.meta.env.BASE_URL to ensure correct paths in both dev and GitHub Pages production
+    const baseUrl = import.meta.env.BASE_URL;
+    
     this.bgmInstances = {
       lobby: new Howl({
-        src: ['/assets/audio/bgm-lobby.wav'],
+        src: [`${baseUrl}assets/audio/bgm-lobby.wav`],
         loop: true,
         volume: 0, // Start at 0 for fade in
         preload: true,
       }),
       battle: new Howl({
-        src: ['/assets/audio/bgm-battle.wav'],
+        src: [`${baseUrl}assets/audio/bgm-battle.wav`],
         loop: true,
         volume: 0,
         preload: true,
@@ -40,15 +43,15 @@ class AudioService {
 
     // Initialize SFX
     this.sfxInstances = {
-      click: new Howl({ src: ['/assets/audio/sfx-click.wav'] }),
-      'card-hover': new Howl({ src: ['/assets/audio/sfx-card-hover.wav'] }),
-      'card-play': new Howl({ src: ['/assets/audio/sfx-card-play.wav'] }),
-      slash: new Howl({ src: ['/assets/audio/sfx-slash.wav'] }),
-      charge: new Howl({ src: ['/assets/audio/sfx-charge.wav'] }),
-      magic: new Howl({ src: ['/assets/audio/sfx-magic.wav'] }),
-      hit: new Howl({ src: ['/assets/audio/sfx-hit.wav'] }),
-      win: new Howl({ src: ['/assets/audio/sfx-win.wav'] }),
-      lose: new Howl({ src: ['/assets/audio/sfx-lose.wav'] }),
+      click: new Howl({ src: [`${baseUrl}assets/audio/sfx-click.wav`] }),
+      'card-hover': new Howl({ src: [`${baseUrl}assets/audio/sfx-card-hover.wav`] }),
+      'card-play': new Howl({ src: [`${baseUrl}assets/audio/sfx-card-play.wav`] }),
+      slash: new Howl({ src: [`${baseUrl}assets/audio/sfx-slash.wav`] }),
+      charge: new Howl({ src: [`${baseUrl}assets/audio/sfx-charge.wav`] }),
+      magic: new Howl({ src: [`${baseUrl}assets/audio/sfx-magic.wav`] }),
+      hit: new Howl({ src: [`${baseUrl}assets/audio/sfx-hit.wav`] }),
+      win: new Howl({ src: [`${baseUrl}assets/audio/sfx-win.wav`] }),
+      lose: new Howl({ src: [`${baseUrl}assets/audio/sfx-lose.wav`] }),
     };
 
     // Set initial global volume
