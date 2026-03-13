@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { audioService } from '@/audio/AudioService';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'primary' | 'danger' | 'outline' | 'ghost';
@@ -7,10 +8,23 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'default', size = 'md', ...props }, ref) => {
+  ({ className, variant = 'default', size = 'md', onClick, onMouseEnter, ...props }, ref) => {
+    
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      audioService.playSFX('click');
+      if (onClick) onClick(e);
+    };
+
+    const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+      audioService.playSFX('card-hover');
+      if (onMouseEnter) onMouseEnter(e);
+    };
+
     return (
       <button
         ref={ref}
+        onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
         className={cn(
           'inline-flex items-center justify-center font-bold transition-all duration-200 sketchy-border',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white',

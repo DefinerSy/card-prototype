@@ -5,6 +5,7 @@ import { canPlayCard } from '@/game/logic/Deck';
 import type { Card, CardType } from '@/game/types';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { audioService } from '@/audio/AudioService';
 
 interface GameBoardProps {
   onGameEnd: (victory: boolean) => void;
@@ -249,6 +250,12 @@ export function GameBoard({ onGameEnd }: GameBoardProps) {
       setTimeout(() => setMessage(''), 1500);
       return;
     }
+
+    // 播放打牌音效
+    audioService.playSFX('card-play');
+    if (card.type === 'damage') audioService.playSFX('slash');
+    else if (card.type === 'fuel') audioService.playSFX('charge');
+    else if (card.type === 'cycle' || card.type === 'buffer') audioService.playSFX('magic');
 
     // 设置动画类型
     setCurrentAction(card.type as CardType);

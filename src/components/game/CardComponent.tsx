@@ -1,4 +1,5 @@
 import type { Card } from '@/game/types';
+import { audioService } from '@/audio/AudioService';
 
 interface CardComponentProps {
   card: Card;
@@ -29,6 +30,18 @@ export function CardComponent({ card, index, canPlay, onPlay }: CardComponentPro
     buffer: '效果',
   };
 
+  const handleMouseEnter = () => {
+    if (canPlay) {
+      audioService.playSFX('card-hover');
+    }
+  };
+
+  const handleClick = () => {
+    if (canPlay) {
+      onPlay(index);
+    }
+  };
+
   return (
     <div
       className={`
@@ -40,7 +53,8 @@ export function CardComponent({ card, index, canPlay, onPlay }: CardComponentPro
         ${card.rarity === 'legendary' ? 'shadow-[0_0_15px_rgba(234,179,8,0.5)]' : ''}
         ${card.rarity === 'rare' ? 'shadow-[0_0_10px_rgba(168,85,247,0.4)]' : ''}
       `}
-      onClick={() => canPlay && onPlay(index)}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
       style={{
         transform: `rotate(${(index % 3) * 2 - 2}deg)`,
         marginLeft: index > 0 ? '-1rem' : '0',

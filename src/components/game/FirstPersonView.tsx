@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Hands } from './Hands';
 import { EnemyView } from './EnemyView';
 import type { GameState, CardType } from '@/game/types';
+import { audioService } from '@/audio/AudioService';
 
 interface FirstPersonViewProps {
   gameState: GameState;
@@ -90,6 +91,7 @@ export function FirstPersonView({
       if (currentAction === 'damage') {
         intensity = 'heavy';
         setIsHit(true);
+        audioService.playSFX('hit');
       } else if (currentAction === 'fuel' || currentAction === 'buffer') {
         intensity = 'medium';
       } else if (currentAction === 'cycle') {

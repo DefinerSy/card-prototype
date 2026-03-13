@@ -5,6 +5,7 @@ import type { Card as CardType } from '@/game/types';
 import { enemies } from '@/game/data/enemies';
 import { useGameStore } from '@/store/useGameStore';
 import { useState } from 'react';
+import { audioService } from '@/audio/AudioService';
 
 // 迷你卡牌组件 - 用于卡组构筑页面
 function MiniCard({ card, onClick, showAddHint, disabled, price, onBuy }: {
@@ -36,6 +37,19 @@ function MiniCard({ card, onClick, showAddHint, disabled, price, onBuy }: {
     buffer: '效果',
   };
 
+  const handleMouseEnter = () => {
+    if (!disabled || onBuy) {
+      audioService.playSFX('card-hover');
+    }
+  };
+
+  const handleClick = () => {
+    if (disabled && !onBuy) return;
+    audioService.playSFX('click');
+    if (onBuy) onBuy();
+    else onClick?.();
+  };
+
   return (
     <div
       className={`
@@ -48,11 +62,8 @@ function MiniCard({ card, onClick, showAddHint, disabled, price, onBuy }: {
         ${card.rarity === 'legendary' ? 'shadow-[0_0_10px_rgba(234,179,8,0.5)]' : ''}
         ${card.rarity === 'rare' ? 'shadow-[0_0_8px_rgba(168,85,247,0.4)]' : ''}
       `}
-      onClick={() => {
-        if (disabled && !onBuy) return;
-        if (onBuy) onBuy();
-        else onClick?.();
-      }}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
     >
       {/* 背景涂鸦污渍 */}
       <div className={`absolute inset-0 ${typeBgColors[card.type]} opacity-50 mix-blend-multiply`} style={{ filter: 'url(#rough-edge)' }}></div>
