@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-sketch: 'Permanent Marker', cursive;
+  --font-handwriting: 'Amatic SC', cursive;
+  
+  font-family: var(--font-handwriting);
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 700;
+  font-size: 1.2rem;
 
   color-scheme: dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0f0f0f;
+  color: #e5e5e5;
+  background-color: #0a0a0a;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -19,6 +23,32 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  position: relative;
+}
+
+/* 全局噪点背景 */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.15;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* 涂鸦风格通用类 */
+.sketchy-border {
+  border: 3px solid #111;
+  border-radius: 2px 255px 3px 25px / 255px 5px 225px 3px;
+  filter: url(#sketchy-line);
+}
+
+.rough-bg {
+  filter: url(#rough-edge);
 }
 
 #root {

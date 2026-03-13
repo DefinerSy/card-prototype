@@ -42,6 +42,19 @@ export const useGameStore = create<GameStore>((set, get) => ({
     };
 
     const result = playCardLogic(newState, cardIndex);
+    
+    // 检查手牌是否为空（在打出卡牌并结算抽牌等效果之后）
+    // 或者检查是否所有手牌都无法使用（费用不足）
+    const hasPlayableCards = newState.hand.some(card => {
+      // 检查是否有足够的其他卡牌作为费用燃烧
+      return newState.hand.length - 1 >= card.cost;
+    });
+
+    if (result.success && !hasPlayableCards && newState.enemy.hp > 0) {
+      newState.isGameOver = true;
+      newState.isVictory = false;
+    }
+
     set({ gameState: newState });
     return result;
   },

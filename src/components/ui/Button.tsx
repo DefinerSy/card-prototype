@@ -12,23 +12,24 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-md font-medium transition-colors',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500',
-          'disabled:pointer-events-none disabled:opacity-50',
+          'inline-flex items-center justify-center font-bold transition-all duration-200 sketchy-border',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white',
+          'disabled:pointer-events-none disabled:opacity-50 disabled:grayscale',
+          'hover:-translate-y-1 hover:rotate-1',
           {
-            'bg-blue-600 text-white hover:bg-blue-700': variant === 'primary',
-            'bg-gray-700 text-white hover:bg-gray-600': variant === 'default',
-            'bg-red-600 text-white hover:bg-red-700': variant === 'danger',
-            'border border-gray-600 bg-transparent hover:bg-gray-800': variant === 'outline',
-            'bg-transparent hover:bg-gray-800 text-gray-300': variant === 'ghost',
+            'bg-[#e0ddd5] text-[#111] hover:bg-[#111] hover:text-[#e0ddd5]': variant === 'primary' || variant === 'default',
+            'bg-red-600 text-[#e0ddd5] hover:bg-[#111] hover:text-red-600': variant === 'danger',
+            'bg-transparent text-[#e0ddd5] border-2 border-[#e0ddd5] hover:bg-[#e0ddd5] hover:text-[#111]': variant === 'outline',
+            'bg-transparent hover:bg-[#111] text-[#e0ddd5] border-none': variant === 'ghost',
           },
           {
-            'h-8 px-3 text-xs': size === 'sm',
-            'h-10 px-4 text-sm': size === 'md',
-            'h-12 px-6 text-base': size === 'lg',
+            'px-3 py-1 text-sm': size === 'sm',
+            'px-6 py-2 text-lg': size === 'md',
+            'px-8 py-3 text-xl': size === 'lg',
           },
           className
         )}
+        style={{ fontFamily: 'var(--font-sketch)' }}
         {...props}
       />
     );

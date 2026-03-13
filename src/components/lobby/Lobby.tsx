@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/Button';
-import { Card as UICard, CardHeader, CardContent } from '@/components/ui/Card';
 import { usePlayerStore } from '@/store/usePlayerStore';
 import { allCards } from '@/game/cards';
 import type { Card as CardType } from '@/game/types';
@@ -17,10 +16,17 @@ function MiniCard({ card, onClick, showAddHint, disabled, price, onBuy }: {
   onBuy?: () => void;
 }) {
   const typeColors = {
-    damage: 'from-red-900/80 to-red-700/80 border-red-500',
-    fuel: 'from-yellow-900/80 to-yellow-700/80 border-yellow-500',
-    cycle: 'from-blue-900/80 to-blue-700/80 border-blue-500',
-    buffer: 'from-green-900/80 to-green-700/80 border-green-500',
+    damage: 'text-red-600',
+    fuel: 'text-yellow-600',
+    cycle: 'text-blue-600',
+    buffer: 'text-green-600',
+  };
+
+  const typeBgColors = {
+    damage: 'bg-red-950/30',
+    fuel: 'bg-yellow-950/30',
+    cycle: 'bg-blue-950/30',
+    buffer: 'bg-green-950/30',
   };
 
   const typeLabels = {
@@ -33,13 +39,14 @@ function MiniCard({ card, onClick, showAddHint, disabled, price, onBuy }: {
   return (
     <div
       className={`
-        relative w-24 h-36 rounded-lg border-2 p-2
-        bg-gradient-to-br ${typeColors[card.type]}
-        ${!disabled && onClick ? 'cursor-pointer hover:scale-105 transition-transform duration-200' : ''}
-        ${!disabled && onBuy ? 'cursor-pointer hover:scale-105 transition-transform duration-200' : ''}
-        ${disabled && !onBuy ? 'opacity-50 cursor-not-allowed' : ''}
-        ${card.rarity === 'legendary' ? 'border-yellow-400 shadow-yellow-500/20' : ''}
-        ${card.rarity === 'rare' ? 'border-purple-400' : ''}
+        relative w-24 h-36 p-2
+        bg-[#e0ddd5] text-[#1a1a1a]
+        rough-bg sketchy-border
+        ${!disabled && onClick ? 'cursor-pointer hover:scale-105 hover:rotate-2 transition-transform duration-200' : ''}
+        ${!disabled && onBuy ? 'cursor-pointer hover:scale-105 hover:rotate-2 transition-transform duration-200' : ''}
+        ${disabled && !onBuy ? 'opacity-50 cursor-not-allowed grayscale' : ''}
+        ${card.rarity === 'legendary' ? 'shadow-[0_0_10px_rgba(234,179,8,0.5)]' : ''}
+        ${card.rarity === 'rare' ? 'shadow-[0_0_8px_rgba(168,85,247,0.4)]' : ''}
       `}
       onClick={() => {
         if (disabled && !onBuy) return;
@@ -47,52 +54,59 @@ function MiniCard({ card, onClick, showAddHint, disabled, price, onBuy }: {
         else onClick?.();
       }}
     >
+      {/* 背景涂鸦污渍 */}
+      <div className={`absolute inset-0 ${typeBgColors[card.type]} opacity-50 mix-blend-multiply`} style={{ filter: 'url(#rough-edge)' }}></div>
+
       {/* 费用 */}
-      <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-gray-900 border-2 border-gray-400 flex items-center justify-center text-xs font-bold text-white">
+      <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-[#111] text-[#e0ddd5] flex items-center justify-center text-sm font-bold sketchy-border z-10" style={{ fontFamily: 'var(--font-sketch)' }}>
         {card.cost}
       </div>
 
       {/* 卡牌名称 */}
-      <div className="text-xs font-bold text-white text-center mb-1 truncate">{card.name}</div>
+      <div className="text-sm font-bold text-center mb-1 leading-tight relative z-10" style={{ fontFamily: 'var(--font-sketch)' }}>{card.name}</div>
 
       {/* 类型标签 */}
-      <div className="text-xs text-gray-300 text-center mb-2">{typeLabels[card.type]}</div>
+      <div className={`text-xs font-bold text-center mb-2 ${typeColors[card.type]} relative z-10`} style={{ fontFamily: 'var(--font-sketch)' }}>
+        <span className="inline-block px-1 bg-[#111] text-current sketchy-border transform -rotate-2">
+          {typeLabels[card.type]}
+        </span>
+      </div>
 
       {/* 卡牌描述 */}
-      <div className="text-xs text-gray-200 text-center leading-tight">{card.description}</div>
+      <div className="text-xs text-center leading-tight relative z-10 mt-1" style={{ fontFamily: 'var(--font-handwriting)', fontWeight: 'bold' }}>{card.description}</div>
 
       {/* 稀有度标记 */}
-      <div className="absolute bottom-1 right-1">
-        {card.rarity === 'legendary' && <span className="text-yellow-400">◆</span>}
-        {card.rarity === 'rare' && <span className="text-purple-400">◇</span>}
-        {card.rarity === 'common' && <span className="text-gray-400">○</span>}
+      <div className="absolute bottom-1 right-1 text-sm font-bold z-10" style={{ fontFamily: 'var(--font-sketch)' }}>
+        {card.rarity === 'legendary' && <span className="text-yellow-600">★</span>}
+        {card.rarity === 'rare' && <span className="text-purple-600">♦</span>}
+        {card.rarity === 'common' && <span className="text-gray-600">●</span>}
       </div>
 
       {/* 卡组已满提示 */}
       {disabled && !onBuy && (
-        <div className="absolute inset-0 bg-black/70 rounded-lg flex items-center justify-center">
-          <span className="text-xs text-red-400 font-semibold px-1 text-center">卡组已满</span>
+        <div className="absolute inset-0 bg-[#111]/80 flex items-center justify-center z-20" style={{ filter: 'url(#rough-edge)' }}>
+          <span className="text-sm text-red-500 font-bold px-1 text-center transform -rotate-12" style={{ fontFamily: 'var(--font-sketch)' }}>FULL</span>
         </div>
       )}
 
       {/* 价格标签 */}
       {onBuy && price !== undefined && (
-        <div className="absolute bottom-1 left-1 bg-yellow-600/80 px-2 py-1 rounded text-xs font-bold text-yellow-100">
-          {price}金
+        <div className="absolute bottom-1 left-1 bg-[#111] px-2 py-0.5 text-xs font-bold text-yellow-500 sketchy-border z-10" style={{ fontFamily: 'var(--font-sketch)' }}>
+          {price}G
         </div>
       )}
 
       {/* 添加提示 */}
       {!disabled && !onBuy && showAddHint && (
-        <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-          <span className="text-xs text-white font-semibold">加入卡组</span>
+        <div className="absolute inset-0 bg-[#111]/60 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity z-20" style={{ filter: 'url(#rough-edge)' }}>
+          <span className="text-lg text-[#e0ddd5] font-bold transform -rotate-12" style={{ fontFamily: 'var(--font-sketch)' }}>+ ADD</span>
         </div>
       )}
 
       {/* 购买提示 */}
       {onBuy && (
-        <div className="absolute inset-0 bg-black/60 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-          <span className="text-xs text-yellow-400 font-semibold">点击购买</span>
+        <div className="absolute inset-0 bg-[#111]/60 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity z-20" style={{ filter: 'url(#rough-edge)' }}>
+          <span className="text-lg text-yellow-500 font-bold transform -rotate-12" style={{ fontFamily: 'var(--font-sketch)' }}>BUY</span>
         </div>
       )}
     </div>
@@ -160,188 +174,190 @@ export function Lobby({ onStartGame, onResetData }: LobbyProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#0a0a0a] p-4 relative overflow-hidden">
+      {/* 涂鸦背景纹理 */}
+      <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="lobby-hatch" width="100" height="100" patternTransform="rotate(15 0 0)" patternUnits="userSpaceOnUse">
+            <path d="M0 0 L0 100 M20 0 L20 100 M40 0 L40 100 M60 0 L60 100 M80 0 L80 100" stroke="#e0ddd5" strokeWidth="0.5" filter="url(#sketchy-line)" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#lobby-hatch)" />
+      </svg>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* 标题和资源显示 */}
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-4xl font-bold text-white">卡牌游戏</h1>
+        <div className="flex justify-between items-center mb-6 border-b-4 border-[#111] pb-4" style={{ filter: 'url(#sketchy-line)' }}>
+          <h1 className="text-5xl font-bold text-[#e0ddd5]" style={{ fontFamily: 'var(--font-sketch)', letterSpacing: '2px' }}>INK & ASHES</h1>
           <div className="flex items-center gap-4">
-            <div className="flex gap-4">
-              <div className="bg-yellow-600/20 px-4 py-2 rounded-lg text-yellow-400">
-                金币：{player.coins}
+            <div className="flex gap-4 font-bold" style={{ fontFamily: 'var(--font-sketch)' }}>
+              <div className="bg-[#111] px-4 py-2 text-yellow-500 sketchy-border transform rotate-1">
+                GOLD: {player.coins}
               </div>
-              <div className="bg-purple-600/20 px-4 py-2 rounded-lg text-purple-400">
-                星尘：{player.stardust}
+              <div className="bg-[#111] px-4 py-2 text-purple-500 sketchy-border transform -rotate-1">
+                DUST: {player.stardust}
               </div>
-              <div className="bg-cyan-600/20 px-4 py-2 rounded-lg text-cyan-400">
-                知识：{player.knowledgeShards}
+              <div className="bg-[#111] px-4 py-2 text-cyan-500 sketchy-border transform rotate-2">
+                LORE: {player.knowledgeShards}
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="primary" size="sm" onClick={handleAddTestCoins}>
-                +100 金币
+              <Button variant="primary" size="sm" onClick={handleAddTestCoins} className="sketchy-border">
+                +100 G
               </Button>
-              <Button variant="danger" size="sm" onClick={onResetData}>
-                重置数据
+              <Button variant="danger" size="sm" onClick={onResetData} className="sketchy-border">
+                RESET
               </Button>
             </div>
           </div>
         </div>
 
         {/* 选项卡 */}
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-4 mb-6">
           <Button
             variant={activeTab === 'deck' ? 'primary' : 'outline'}
             onClick={() => setActiveTab('deck')}
+            className={`sketchy-border text-lg ${activeTab === 'deck' ? 'transform -translate-y-1' : ''}`}
+            style={{ fontFamily: 'var(--font-sketch)' }}
           >
-            卡组构筑 ({player.deck.length}/30)
+            DECK ({player.deck.length}/30)
           </Button>
           <Button
             variant={activeTab === 'cards' ? (isDeckFull ? 'danger' : 'primary') : 'outline'}
             onClick={() => setActiveTab('cards')}
             disabled={isDeckFull}
+            className={`sketchy-border text-lg ${activeTab === 'cards' ? 'transform -translate-y-1' : ''}`}
+            style={{ fontFamily: 'var(--font-sketch)' }}
           >
-            我的收藏 {isDeckFull && '(已满)'}
+            COLLECTION {isDeckFull && '(FULL)'}
           </Button>
           <Button
             variant={activeTab === 'shop' ? 'primary' : 'outline'}
             onClick={() => setActiveTab('shop')}
+            className={`sketchy-border text-lg ${activeTab === 'shop' ? 'transform -translate-y-1' : ''}`}
+            style={{ fontFamily: 'var(--font-sketch)' }}
           >
-            卡牌商店
+            SHOP
           </Button>
         </div>
 
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-6">
           {/* 左侧：卡组/卡牌列表 */}
           <div className="col-span-3">
-            <UICard>
-              <CardHeader>
-                <h2 className="text-xl font-semibold">
-                  {activeTab === 'deck' && `当前卡组 (${player.deck.length} 张)`}
-                  {activeTab === 'cards' && `已解锁卡牌 (${collectedCardsUnique.length} 种，可无限复制)`}
-                  {activeTab === 'shop' && `可解锁卡牌 (${lockedCards.length} 张)`}
-                </h2>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-6 gap-2 max-h-[600px] overflow-y-auto">
-                  {activeTab === 'deck' &&
-                    deckCards.map((card, idx) => (
-                      <MiniCard
-                        key={`${card.id}-${idx}`}
-                        card={card}
-                        onClick={() => removeFromDeck(card.id, idx)}
-                      />
-                    ))}
+            <div className="bg-[#e0ddd5] p-6 sketchy-border rough-bg">
+              <h2 className="text-2xl font-bold mb-4 text-[#111] border-b-2 border-[#111] pb-2" style={{ fontFamily: 'var(--font-sketch)' }}>
+                {activeTab === 'deck' && `CURRENT DECK (${player.deck.length})`}
+                {activeTab === 'cards' && `UNLOCKED CARDS (${collectedCardsUnique.length})`}
+                {activeTab === 'shop' && `LOCKED CARDS (${lockedCards.length})`}
+              </h2>
+              
+              <div className="grid grid-cols-6 gap-4 max-h-[600px] overflow-y-auto p-2">
+                {activeTab === 'deck' &&
+                  deckCards.map((card, idx) => (
+                    <MiniCard
+                      key={`${card.id}-${idx}`}
+                      card={card}
+                      onClick={() => removeFromDeck(card.id, idx)}
+                    />
+                  ))}
 
-                  {activeTab === 'cards' &&
-                    collectedCardsUnique.map((card, idx) => (
-                      <MiniCard
-                        key={`${card.id}-${idx}`}
-                        card={card}
-                        onClick={() => addToDeck(card.id)}
-                        showAddHint
-                        disabled={isDeckFull}
-                      />
-                    ))}
+                {activeTab === 'cards' &&
+                  collectedCardsUnique.map((card, idx) => (
+                    <MiniCard
+                      key={`${card.id}-${idx}`}
+                      card={card}
+                      onClick={() => addToDeck(card.id)}
+                      showAddHint
+                      disabled={isDeckFull}
+                    />
+                  ))}
 
-                  {activeTab === 'shop' &&
-                    lockedCards.map((card) => (
-                      <MiniCard
-                        key={card.id}
-                        card={card}
-                        onBuy={() => handleBuyCard(card)}
-                        price={getCardPrice(card)}
-                      />
-                    ))}
+                {activeTab === 'shop' &&
+                  lockedCards.map((card) => (
+                    <MiniCard
+                      key={card.id}
+                      card={card}
+                      onBuy={() => handleBuyCard(card)}
+                      price={getCardPrice(card)}
+                    />
+                  ))}
 
-                  {activeTab === 'deck' && player.deck.length === 0 && (
-                    <div className="col-span-6 text-center text-gray-400 py-8">
-                      卡组为空，从"我的收藏"中添加卡牌
-                    </div>
-                  )}
+                {activeTab === 'deck' && player.deck.length === 0 && (
+                  <div className="col-span-6 text-center text-[#111] py-12 text-2xl" style={{ fontFamily: 'var(--font-sketch)' }}>
+                    DECK IS EMPTY. ADD CARDS FROM COLLECTION.
+                  </div>
+                )}
 
-                  {activeTab === 'cards' && isDeckFull && (
-                    <div className="col-span-6 text-center text-red-400 font-semibold py-4 bg-red-900/20 rounded-lg">
-                      卡组已达上限（30 张），无法继续添加
-                    </div>
-                  )}
+                {activeTab === 'cards' && isDeckFull && (
+                  <div className="col-span-6 text-center text-red-600 font-bold py-4 bg-red-950/20 sketchy-border" style={{ fontFamily: 'var(--font-sketch)' }}>
+                    DECK LIMIT REACHED (30)
+                  </div>
+                )}
 
-                  {activeTab === 'shop' && lockedCards.length === 0 && (
-                    <div className="col-span-6 text-center text-green-400 font-semibold py-8">
-                      所有卡牌都已解锁！
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </UICard>
+                {activeTab === 'shop' && lockedCards.length === 0 && (
+                  <div className="col-span-6 text-center text-green-600 font-bold py-12 text-2xl" style={{ fontFamily: 'var(--font-sketch)' }}>
+                    ALL CARDS UNLOCKED!
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* 右侧：信息和操作 */}
-          <div className="space-y-3">
+          <div className="space-y-6">
             {/* 敌人选择 */}
-            <UICard>
-              <CardHeader className="px-3 py-2">
-                <h2 className="text-base font-semibold">选择敌人</h2>
-              </CardHeader>
-              <CardContent className="px-3 py-2">
-                <div className="space-y-1">
-                  {enemies.map((enemy, index) => (
-                    <div
-                      key={enemy.id}
-                      className={`p-2 rounded-lg cursor-pointer transition ${
-                        selectedEnemy === index
-                          ? 'bg-red-900/30 border border-red-500'
-                          : 'bg-gray-700 hover:bg-gray-600'
-                      }`}
-                      onClick={() => setSelectedEnemy(index)}
-                    >
-                      <div className="font-semibold text-white text-sm">{enemy.name}</div>
-                      <div className="text-xs text-gray-400">生命值：{enemy.hp}</div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </UICard>
+            <div className="bg-[#e0ddd5] p-4 sketchy-border rough-bg">
+              <h2 className="text-xl font-bold mb-3 text-[#111]" style={{ fontFamily: 'var(--font-sketch)' }}>SELECT TARGET</h2>
+              <div className="space-y-2">
+                {enemies.map((enemy, index) => (
+                  <div
+                    key={enemy.id}
+                    className={`p-3 cursor-pointer transition-all sketchy-border ${
+                      selectedEnemy === index
+                        ? 'bg-[#111] text-[#e0ddd5] transform scale-105 rotate-1'
+                        : 'bg-transparent text-[#111] hover:bg-[#111]/10'
+                    }`}
+                    onClick={() => setSelectedEnemy(index)}
+                  >
+                    <div className="font-bold text-lg" style={{ fontFamily: 'var(--font-sketch)' }}>{enemy.name}</div>
+                    <div className={`text-sm font-bold ${selectedEnemy === index ? 'text-red-400' : 'text-red-600'}`}>HP: {enemy.hp}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             {/* 开始游戏按钮 */}
-            <UICard>
-              <CardContent className="px-3 py-2">
-                <div className="space-y-1">
-                  <div className="text-xs text-gray-400">
-                    卡组：{player.deck.length} 张牌
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    提示：至少需要 10 张牌才能开始游戏
-                  </div>
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    className="w-full mt-2"
-                    onClick={handleStartGame}
-                    disabled={player.deck.length < 10}
-                  >
-                    开始游戏
-                  </Button>
+            <div className="bg-[#e0ddd5] p-4 sketchy-border rough-bg">
+              <div className="space-y-2 text-center">
+                <div className="text-lg font-bold text-[#111]" style={{ fontFamily: 'var(--font-sketch)' }}>
+                  DECK: {player.deck.length} / 30
                 </div>
-              </CardContent>
-            </UICard>
+                {player.deck.length < 10 && (
+                  <div className="text-sm font-bold text-red-600" style={{ fontFamily: 'var(--font-handwriting)' }}>
+                    NEED AT LEAST 10 CARDS
+                  </div>
+                )}
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="w-full mt-4 py-4 text-2xl sketchy-border"
+                  style={{ fontFamily: 'var(--font-sketch)' }}
+                  onClick={handleStartGame}
+                  disabled={player.deck.length < 10}
+                >
+                  ENTER DUNGEON
+                </Button>
+              </div>
+            </div>
 
             {/* 统计信息 */}
-            <UICard>
-              <CardHeader className="px-3 py-2">
-                <h2 className="text-base font-semibold">统计</h2>
-              </CardHeader>
-              <CardContent className="px-3 py-2">
-                <div className="space-y-1 text-xs">
-                  <div className="text-gray-400">
-                    已玩局数：<span className="text-white">{player.stats.gamesPlayed}</span>
-                  </div>
-                  <div className="text-gray-400">
-                    胜利局数：<span className="text-white">{player.stats.gamesWon}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </UICard>
+            <div className="bg-[#e0ddd5] p-4 sketchy-border rough-bg">
+              <h2 className="text-xl font-bold mb-2 text-[#111]" style={{ fontFamily: 'var(--font-sketch)' }}>STATS</h2>
+              <div className="space-y-1 text-lg font-bold text-[#111]" style={{ fontFamily: 'var(--font-handwriting)' }}>
+                <div>RUNS: {player.stats.gamesPlayed}</div>
+                <div>VICTORIES: {player.stats.gamesWon}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
